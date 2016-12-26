@@ -1,22 +1,28 @@
 # Reproducible Research: Assignement
 
 #1. Read the data and agregate
-```{r readdata}
+
+```r
 dt<-read.csv("activity.csv")
 dt$date<-as.Date(dt$date, format = "%Y-%m-%d")
 bydate<-aggregate(steps~date,dt,sum)
 ```
 #2 Histogram of steps by day
-```{r}
+
+```r
 hist(bydate$steps,xlab="Number of Steps",main="Steps Per Day")
 ```
+
+![plot of chunk unnamed-chunk-1](figure/unnamed-chunk-1-1.png)
 #3 Calculate median and mean
-```{r}
+
+```r
 mediansteps <- median(bydate$steps,na.rm=TRUE)
 meansteps <- mean(bydate$steps,na.rm=TRUE)
 ```
 #4 Average steps plot
-```{r}
+
+```r
 avgbydate<-aggregate(steps~date,dt,sum,na.rm=TRUE)
 library(ggplot2)
 ggplot(avgbydate,aes(x=date,y=steps,group=0)) +
@@ -24,22 +30,30 @@ ggplot(avgbydate,aes(x=date,y=steps,group=0)) +
   labs(title="Avg  steps by Date",x="Date",y="Avg  steps") + 
   theme_bw()
 ```
+
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png)
 #5 Interval with max steps -- 835
-```{r}
+
+```r
 avgbyInt<-aggregate(steps~interval,dt,sum,na.rm=TRUE)
 intervalmax <- avgbyInt[which.max(avgbyInt$steps),]
 ```
 #6 fill Steps with avgStep
-```{r}
+
+```r
 for(i in 1:nrow(dt)) {if (is.na(dt[i,]$steps)) {dt[i,]$steps = meansteps }}
 ```
 #7 histogram with missing values filled
-```{r}
+
+```r
 bydatefilled<-aggregate(steps~date,dt,sum)
 hist(bydatefilled$steps,xlab="Number of Steps",main="Steps Per Day")
 ```
+
+![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6-1.png)
 #8 Compare average steps for Weekend and weekdays
-```{r}
+
+```r
 weekend <- c("Saturday","Sunday")
 dayofweek <- weekdays(dt$date)
 
@@ -64,6 +78,6 @@ dtWeekInt<-rbind(dtWeekdayInt,dtWeekendInt)
 
 ggplot(dtWeekInt, aes(x=interval, y=steps,color=dayofweek)) + 
     geom_line() 
-
-
 ```
+
+![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7-1.png)
